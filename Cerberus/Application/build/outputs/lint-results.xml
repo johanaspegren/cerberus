@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="4" by="lint 24.4.1">
+
+    <issue
+        id="InlinedApi"
+        severity="Warning"
+        message="Field requires API level 13 (current min is 11): `android.R.style#TextAppearance_Holo_Medium`"
+        category="Correctness"
+        priority="6"
+        summary="Using inlined constants on older versions"
+        explanation="This check scans through all the Android API field references in the application and flags certain constants, such as static final integers and Strings, which were introduced in later versions. These will actually be copied into the class files rather than being referenced, which means that the value is available even when running on older devices. In some cases that&apos;s fine, and in other cases it can result in a runtime crash or incorrect behavior. It depends on the context, so consider the code carefully and device whether it&apos;s safe and can be suppressed or whether the code needs tbe guarded.
+
+If you really want to use this API and don&apos;t need to support older devices just set the `minSdkVersion` in your `build.gradle` or `AndroidManifest.xml` files.
+If your code is *deliberately* accessing newer APIs, and you have ensured (e.g. with conditional execution) that this code will only ever be called on a supported platform, then you can annotate your class or method with the `@TargetApi` annotation specifying the local minimum SDK to apply, such as `@TargetApi(11)`, such that this check considers 11 rather than your manifest file&apos;s minimum SDK as the required API level.
+"
+        errorLine1="        mLogView.setTextAppearance(getActivity(), android.R.style.TextAppearance_Holo_Medium);"
+        errorLine2="                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        quickfix="studio,adt">
+        <location
+            file="/home/CORPUSERS/23051915/AndroidStudioProjects/BluetoothChat/Application/src/main/java/com/example/android/common/logger/LogFragment.java"
+            line="79"
+            column="51"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of com.android.support:support-v4 than 23.1.0 is available: 23.2.0"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    compile &quot;com.android.support:support-v4:23.1.0&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        quickfix="studio">
+        <location
+            file="/home/CORPUSERS/23051915/AndroidStudioProjects/BluetoothChat/Application/build.gradle"
+            line="19"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Typos"
+        severity="Warning"
+        message="&quot;Transfering&quot; is a common misspelling; did you mean &quot;Transferring&quot; ?"
+        category="Correctness:Messages"
+        priority="7"
+        summary="Spelling error"
+        explanation="This check looks through the string definitions, and if it finds any words that look like likely misspellings, they are flagged."
+        errorLine1="              (5) Transfering data over Bluetooth"
+        errorLine2="                  ^"
+        quickfix="studio,adt">
+        <location
+            file="/home/CORPUSERS/23051915/AndroidStudioProjects/BluetoothChat/Application/src/main/res/values/base-strings.xml"
+            line="30"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="HandlerLeak"
+        severity="Warning"
+        message="This Handler class should be static or leaks might occur (new android.os.Handler(){})"
+        category="Performance"
+        priority="4"
+        summary="Handler reference leaks"
+        explanation="Since this Handler is declared as an inner class, it may prevent the outer class from being garbage collected. If the Handler is using a Looper or MessageQueue for a thread other than the main thread, then there is no issue. If the Handler is using the Looper or MessageQueue of the main thread, you need to fix your Handler declaration, as follows: Declare the Handler as a static class; In the outer class, instantiate a WeakReference to the outer class and pass this object to your Handler when you instantiate the Handler; Make all references to members of the outer class using the WeakReference object."
+        errorLine1="    private final Handler mHandler = new Handler() {"
+        errorLine2="                                                   ^">
+        <location
+            file="/home/CORPUSERS/23051915/AndroidStudioProjects/BluetoothChat/Application/src/main/java/com/example/android/bluetoothchat/BluetoothChatFragment.java"
+            line="278"
+            column="52"/>
+    </issue>
+
+    <issue
+        id="InefficientWeight"
+        severity="Warning"
+        message="Use a `layout_height` of `0dp` instead of `match_parent` for better performance"
+        category="Performance"
+        priority="3"
+        summary="Inefficient layout weight"
+        explanation="When only a single widget in a LinearLayout defines a weight, it is more efficient to assign a width/height of `0dp` to it since it will absorb all the remaining space anyway. With a declared width/height of `0dp` it does not have to measure its own size first."
+        errorLine1="        android:layout_height=&quot;match_parent&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        quickfix="studio,adt">
+        <location
+            file="/home/CORPUSERS/23051915/AndroidStudioProjects/BluetoothChat/Application/src/main/res/layout/fragment_bluetooth_chat.xml"
+            line="25"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="InefficientWeight"
+        severity="Warning"
+        message="Use a `layout_width` of `0dp` instead of `wrap_content` for better performance"
+        category="Performance"
+        priority="3"
+        summary="Inefficient layout weight"
+        explanation="When only a single widget in a LinearLayout defines a weight, it is more efficient to assign a width/height of `0dp` to it since it will absorb all the remaining space anyway. With a declared width/height of `0dp` it does not have to measure its own size first."
+        errorLine1="            android:layout_width=&quot;wrap_content&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        quickfix="studio,adt">
+        <location
+            file="/home/CORPUSERS/23051915/AndroidStudioProjects/BluetoothChat/Application/src/main/res/layout/fragment_bluetooth_chat.xml"
+            line="37"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="NestedWeights"
+        severity="Warning"
+        message="Nested weights are bad for performance"
+        category="Performance"
+        priority="3"
+        summary="Nested layout weights"
+        explanation="Layout weights require a widget to be measured twice. When a LinearLayout with non-zero weights is nested inside another LinearLayout with non-zero weights, then the number of measurements increase exponentially."
+        errorLine1="              android:layout_weight=&quot;1&quot; />"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/CORPUSERS/23051915/AndroidStudioProjects/BluetoothChat/Application/src/main/res/layout-w720dp/activity_main.xml"
+            line="56"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        severity="Warning"
+        message="The resource `R.dimen.margin_tiny` appears to be unused"
+        category="Performance"
+        priority="3"
+        summary="Unused resources"
+        explanation="Unused resources make applications larger and slow down builds."
+        errorLine1="    &lt;dimen name=&quot;margin_tiny&quot;>4dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/CORPUSERS/23051915/AndroidStudioProjects/BluetoothChat/Application/src/main/res/values/template-dimens.xml"
+            line="21"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        severity="Warning"
+        message="The resource `R.dimen.margin_small` appears to be unused"
+        category="Performance"
+        priority="3"
+        summary="Unused resources"
+        explanation="Unused resources make applications larger and slow down builds."
+        errorLine1="    &lt;dimen name=&quot;margin_small&quot;>8dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/CORPUSERS/23051915/AndroidStudioProjects/BluetoothChat/Application/src/main/res/values/template-dimens.xml"
+            line="22"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        severity="Warning"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        category="Usability:Typography"
+        priority="5"
+        summary="Ellipsis string can be replaced with ellipsis character"
+        explanation="You can replace the string &quot;...&quot; with a dedicated ellipsis character, ellipsis character (…, &amp;#8230;). This can help make the text more readable."
+        url="http://en.wikipedia.org/wiki/Ellipsis"
+        urls="http://en.wikipedia.org/wiki/Ellipsis"
+        errorLine1="    &lt;string name=&quot;title_connecting&quot;>connecting...&lt;/string>"
+        errorLine2="                                    ^"
+        quickfix="studio,adt">
+        <location
+            file="/home/CORPUSERS/23051915/AndroidStudioProjects/BluetoothChat/Application/src/main/res/values/strings.xml"
+            line="23"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        severity="Warning"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        category="Usability:Typography"
+        priority="5"
+        summary="Ellipsis string can be replaced with ellipsis character"
+        explanation="You can replace the string &quot;...&quot; with a dedicated ellipsis character, ellipsis character (…, &amp;#8230;). This can help make the text more readable."
+        url="http://en.wikipedia.org/wiki/Ellipsis"
+        urls="http://en.wikipedia.org/wiki/Ellipsis"
+        errorLine1="    &lt;string name=&quot;scanning&quot;>scanning for devices...&lt;/string>"
+        errorLine2="                            ^"
+        quickfix="studio,adt">
+        <location
+            file="/home/CORPUSERS/23051915/AndroidStudioProjects/BluetoothChat/Application/src/main/res/values/strings.xml"
+            line="28"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="IconDensities"
+        severity="Warning"
+        message="Missing the following drawables in `drawable-mdpi`: tile.9.png (found in drawable-hdpi)"
+        category="Usability:Icons"
+        priority="4"
+        summary="Icon densities validation"
+        explanation="Icons will look best if a custom version is provided for each of the major screen density classes (low, medium, high, extra high). This lint check identifies icons which do not have complete coverage across the densities.
+
+Low density is not really used much anymore, so this check ignores the ldpi density. To force lint to include it, set the environment variable `ANDROID_LINT_INCLUDE_LDPI=true`. For more information on current density usage, see http://developer.android.com/resources/dashboard/screens.html"
+        url="http://developer.android.com/guide/practices/screens_support.html"
+        urls="http://developer.android.com/guide/practices/screens_support.html">
+        <location
+            file="/home/CORPUSERS/23051915/AndroidStudioProjects/BluetoothChat/Application/src/main/res/drawable-mdpi"/>
+    </issue>
+
+    <issue
+        id="IconDensities"
+        severity="Warning"
+        message="Missing the following drawables in `drawable-xhdpi`: tile.9.png (found in drawable-hdpi)"
+        category="Usability:Icons"
+        priority="4"
+        summary="Icon densities validation"
+        explanation="Icons will look best if a custom version is provided for each of the major screen density classes (low, medium, high, extra high). This lint check identifies icons which do not have complete coverage across the densities.
+
+Low density is not really used much anymore, so this check ignores the ldpi density. To force lint to include it, set the environment variable `ANDROID_LINT_INCLUDE_LDPI=true`. For more information on current density usage, see http://developer.android.com/resources/dashboard/screens.html"
+        url="http://developer.android.com/guide/practices/screens_support.html"
+        urls="http://developer.android.com/guide/practices/screens_support.html">
+        <location
+            file="/home/CORPUSERS/23051915/AndroidStudioProjects/BluetoothChat/Application/src/main/res/drawable-xhdpi"/>
+    </issue>
+
+    <issue
+        id="IconDensities"
+        severity="Warning"
+        message="Missing the following drawables in `drawable-xxhdpi`: tile.9.png (found in drawable-hdpi)"
+        category="Usability:Icons"
+        priority="4"
+        summary="Icon densities validation"
+        explanation="Icons will look best if a custom version is provided for each of the major screen density classes (low, medium, high, extra high). This lint check identifies icons which do not have complete coverage across the densities.
+
+Low density is not really used much anymore, so this check ignores the ldpi density. To force lint to include it, set the environment variable `ANDROID_LINT_INCLUDE_LDPI=true`. For more information on current density usage, see http://developer.android.com/resources/dashboard/screens.html"
+        url="http://developer.android.com/guide/practices/screens_support.html"
+        urls="http://developer.android.com/guide/practices/screens_support.html">
+        <location
+            file="/home/CORPUSERS/23051915/AndroidStudioProjects/BluetoothChat/Application/src/main/res/drawable-xxhdpi"/>
+    </issue>
+
+    <issue
+        id="IconMissingDensityFolder"
+        severity="Warning"
+        message="Missing density variation folders in `src/main/res`: drawable-xxxhdpi"
+        category="Usability:Icons"
+        priority="3"
+        summary="Missing density folder"
+        explanation="Icons will look best if a custom version is provided for each of the major screen density classes (low, medium, high, extra-high, extra-extra-high). This lint check identifies folders which are missing, such as `drawable-hdpi`.
+Low density is not really used much anymore, so this check ignores the ldpi density. To force lint to include it, set the environment variable `ANDROID_LINT_INCLUDE_LDPI=true`. For more information on current density usage, see http://developer.android.com/resources/dashboard/screens.html"
+        url="http://developer.android.com/guide/practices/screens_support.html"
+        urls="http://developer.android.com/guide/practices/screens_support.html">
+        <location
+            file="/home/CORPUSERS/23051915/AndroidStudioProjects/BluetoothChat/Application/src/main/res"/>
+    </issue>
+
+    <issue
+        id="TextFields"
+        severity="Warning"
+        message="This text field does not specify an `inputType` or a `hint`"
+        category="Usability"
+        priority="5"
+        summary="Missing `inputType` or `hint`"
+        explanation="Providing an `inputType` attribute on a text field improves usability because depending on the data to be input, optimized keyboards can be shown to the user (such as just digits and parentheses for a phone number). Similarly,a hint attribute displays a hint to the user for what is expected in the text field.
+
+The lint detector also looks at the `id` of the view, and if the id offers a hint of the purpose of the field (for example, the `id` contains the phrase `phone` or `email`), then lint will also ensure that the `inputType` contains the corresponding type attributes.
+
+If you really want to keep the text field generic, you can suppress this warning by setting `inputType=&quot;text&quot;`."
+        errorLine1="        &lt;EditText"
+        errorLine2="        ^"
+        quickfix="studio,adt">
+        <location
+            file="/home/CORPUSERS/23051915/AndroidStudioProjects/BluetoothChat/Application/src/main/res/layout/fragment_bluetooth_chat.xml"
+            line="35"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        severity="Warning"
+        message="When you define `paddingLeft` you should probably also define `paddingRight` for right-to-left symmetry"
+        category="Bi-directional Text"
+        priority="6"
+        summary="Padding and margin symmetry"
+        explanation="If you specify padding or margin on the left side of a layout, you should probably also specify padding on the right side (and vice versa) for right-to-left layout symmetry."
+        errorLine1="        android:paddingLeft=&quot;5dp&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/CORPUSERS/23051915/AndroidStudioProjects/BluetoothChat/Application/src/main/res/layout/activity_device_list.xml"
+            line="27"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        severity="Warning"
+        message="When you define `paddingLeft` you should probably also define `paddingRight` for right-to-left symmetry"
+        category="Bi-directional Text"
+        priority="6"
+        summary="Padding and margin symmetry"
+        explanation="If you specify padding or margin on the left side of a layout, you should probably also specify padding on the right side (and vice versa) for right-to-left layout symmetry."
+        errorLine1="        android:paddingLeft=&quot;5dp&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/CORPUSERS/23051915/AndroidStudioProjects/BluetoothChat/Application/src/main/res/layout/activity_device_list.xml"
+            line="46"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        severity="Warning"
+        message="Consider adding `android:paddingStart=&quot;5dp&quot;` to better support right-to-left layouts"
+        category="Bi-directional Text"
+        priority="5"
+        summary="Using left/right instead of start/end attributes"
+        explanation="Using `Gravity#LEFT` and `Gravity#RIGHT` can lead to problems when a layout is rendered in locales where text flows from right to left. Use `Gravity#START` and `Gravity#END` instead. Similarly, in XML `gravity` and `layout_gravity` attributes, use `start` rather than `left`.
+For XML attributes such as paddingLeft and `layout_marginLeft`, use `paddingStart` and `layout_marginStart`. *NOTE*: If your `minSdkVersion` is less than 17, you should add *both* the older left/right attributes *as well as* the new start/right attributes. On older platforms, where RTL is not supported and the start/right attributes are unknown and therefore ignored, you need the older left/right attributes. There is a separate lint check which catches that type of error.
+(Note: For `Gravity#LEFT` and `Gravity#START`, you can use these constants even when targeting older platforms, because the `start` bitmask is a superset of the `left` bitmask. Therefore, you can use `gravity=&quot;start&quot;` rather than `gravity=&quot;left|start&quot;`.)"
+        errorLine1="        android:paddingLeft=&quot;5dp&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/CORPUSERS/23051915/AndroidStudioProjects/BluetoothChat/Application/src/main/res/layout/activity_device_list.xml"
+            line="27"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        severity="Warning"
+        message="Consider adding `android:paddingStart=&quot;5dp&quot;` to better support right-to-left layouts"
+        category="Bi-directional Text"
+        priority="5"
+        summary="Using left/right instead of start/end attributes"
+        explanation="Using `Gravity#LEFT` and `Gravity#RIGHT` can lead to problems when a layout is rendered in locales where text flows from right to left. Use `Gravity#START` and `Gravity#END` instead. Similarly, in XML `gravity` and `layout_gravity` attributes, use `start` rather than `left`.
+For XML attributes such as paddingLeft and `layout_marginLeft`, use `paddingStart` and `layout_marginStart`. *NOTE*: If your `minSdkVersion` is less than 17, you should add *both* the older left/right attributes *as well as* the new start/right attributes. On older platforms, where RTL is not supported and the start/right attributes are unknown and therefore ignored, you need the older left/right attributes. There is a separate lint check which catches that type of error.
+(Note: For `Gravity#LEFT` and `Gravity#START`, you can use these constants even when targeting older platforms, because the `start` bitmask is a superset of the `left` bitmask. Therefore, you can use `gravity=&quot;start&quot;` rather than `gravity=&quot;left|start&quot;`.)"
+        errorLine1="        android:paddingLeft=&quot;5dp&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/CORPUSERS/23051915/AndroidStudioProjects/BluetoothChat/Application/src/main/res/layout/activity_device_list.xml"
+            line="46"
+            column="9"/>
+    </issue>
+
+</issues>
